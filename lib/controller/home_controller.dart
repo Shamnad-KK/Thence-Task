@@ -3,6 +3,10 @@ import 'package:thence_task/model/product_model.dart';
 import 'package:thence_task/view/product_detail/product_detail_screen.dart';
 
 class HomeController extends ChangeNotifier {
+  HomeController() {
+    setLoading();
+  }
+  bool isLoading = false;
   int selectedChip = 0;
   List<String> choiceChips = [
     'All',
@@ -43,6 +47,18 @@ class HomeController extends ChangeNotifier {
       isFavorite: false,
     ),
   ];
+
+  void setLoading() async {
+    isLoading = true;
+    notifyListeners();
+    await Future.delayed(
+      const Duration(seconds: 3),
+      () {
+        isLoading = false;
+        notifyListeners();
+      },
+    );
+  }
 
   void addOrRemoveFavorite(ProductModel model) {
     model.isFavorite = !model.isFavorite;

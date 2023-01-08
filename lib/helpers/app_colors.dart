@@ -8,6 +8,8 @@ class AppColors {
   static const bgColor = Color(0xFFFFFFFF);
   static const selectedChip = Color(0xFFB08888);
   static const unselectedChip = Color(0xFFF4F4F4);
+  static const shimmer = Color.fromARGB(205, 244, 244, 244);
+  static const shimmerHighlight = Color.fromARGB(205, 240, 236, 236);
   static const productDetailBg = LinearGradient(
     colors: [
       Colors.white,

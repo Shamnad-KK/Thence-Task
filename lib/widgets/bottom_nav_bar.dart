@@ -14,6 +14,7 @@ class BottomNavBar extends StatelessWidget {
       builder: (context, value, child) => Scaffold(
         body: value.pages[bottomNavController.currentIndex],
         bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           currentIndex: value.currentIndex,
           items: [
             BottomNavigationBarItem(
