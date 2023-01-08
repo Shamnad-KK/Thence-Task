@@ -7,6 +7,7 @@ class ProductModel {
   final String image;
   final List<String> sizes;
   final Color bgColor;
+  bool isFavorite;
   ProductModel({
     required this.name,
     required this.price,
@@ -14,5 +15,6 @@ class ProductModel {
     required this.image,
     required this.sizes,
     required this.bgColor,
+    required this.isFavorite,
   });
 }

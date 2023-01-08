@@ -66,6 +66,7 @@ flutter:
     - assets/bottom_nav_bar/favorite.png
     - assets/bottom_nav_bar/home.png
     - assets/bottom_nav_bar/profile.png
+    - assets/plant-3698820_1920-removebg-preview.png
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -76,11 +77,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: Montserrat
-      fonts:
-        - asset: assets/fonts/Montserrat-VariableFont_wght.ttf
-        - asset: assets/fonts/Montserrat-Regular.ttf
+  # fonts:
+  #   - family: Montserrat
+  #     fonts:
+  #       - asset: assets/fonts/Montserrat-VariableFont_wght.ttf
+  #       - asset: assets/fonts/Montserrat-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

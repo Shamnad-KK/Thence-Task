@@ -19,6 +19,7 @@ class HomeController extends ChangeNotifier {
       image: 'assets/imgSucculent_1.png',
       sizes: ['16', '20', '24', '30'],
       bgColor: const Color.fromARGB(255, 225, 241, 250),
+      isFavorite: false,
     ),
     ProductModel(
       name: 'Echeveria',
@@ -27,8 +28,26 @@ class HomeController extends ChangeNotifier {
       image: 'assets/scott-webb-WwWkgOMU8H8-unsplash-removebg 1.png',
       sizes: ['18', '20', '24', '30'],
       bgColor: const Color.fromARGB(255, 254, 239, 226),
+      isFavorite: false,
     ),
   ];
+
+  List<ProductModel> productBelowBanner = [
+    ProductModel(
+      name: 'Haworthia',
+      price: '22',
+      rating: '4,2',
+      image: 'assets/plant-3698820_1920-removebg-preview.png',
+      sizes: ['19', '20', '24', '30'],
+      bgColor: const Color.fromARGB(255, 254, 239, 226),
+      isFavorite: false,
+    ),
+  ];
+
+  void addOrRemoveFavorite(ProductModel model) {
+    model.isFavorite = !model.isFavorite;
+    notifyListeners();
+  }
 
   void changeChip(int index) {
     selectedChip = index;

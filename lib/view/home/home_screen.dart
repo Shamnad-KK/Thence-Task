@@ -79,11 +79,17 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: size.height * 0.03),
-              const HomeProductsWidget(),
+              Consumer<HomeController>(
+                  builder: (context, value, child) => HomeProductsWidget(
+                        products: value.products,
+                      )),
               SizedBox(height: size.height * 0.05),
               const HomeAdWidget(),
               SizedBox(height: size.height * 0.03),
-              const HomeProductsWidget()
+              Consumer<HomeController>(
+                  builder: (context, value, child) => HomeProductsWidget(
+                        products: value.productBelowBanner,
+                      )),
             ],
           ),
         ),
