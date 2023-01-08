@@ -30,7 +30,7 @@ class HomeShimmers extends StatelessWidget {
                   );
                 },
                 separatorBuilder: (context, index) {
-                  return AppSpacing.sboxW10;
+                  return AppSpacing.sboxW20;
                 },
                 itemCount: 4),
           ),

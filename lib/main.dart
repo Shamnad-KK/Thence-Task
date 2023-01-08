@@ -36,7 +36,8 @@ class MyApp extends StatelessWidget {
                 iconTheme: IconThemeData(
                   color: AppColors.black,
                 )),
-            fontFamily: GoogleFonts.montserrat().fontFamily,
+            textTheme:
+                GoogleFonts.montserratTextTheme(Theme.of(context).textTheme),
           ),
           debugShowCheckedModeBanner: false,
           home: const BottomNavBar(),

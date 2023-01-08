@@ -82,7 +82,7 @@ class HomeScreen extends StatelessWidget {
                                         );
                                       },
                                       separatorBuilder: (context, index) {
-                                        return AppSpacing.sboxW10;
+                                        return AppSpacing.sboxW20;
                                       },
                                       itemCount: value.choiceChips.length)),
                               SizedBox(height: size.height * 0.03),
