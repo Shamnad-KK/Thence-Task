@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: PreferredSize(
-            preferredSize: Size(size.width, size.height * 0.12),
+            preferredSize: Size(size.width, size.height * 0.14),
             child: Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.03, vertical: size.height * 0.03),
