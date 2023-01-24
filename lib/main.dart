@@ -53,7 +53,9 @@ class MyApp extends StatelessWidget {
                   create: (context) => BottomNavBloc(),
                 ),
                 BlocProvider(
-                  create: (context) => CartBloc(),
+                  create: (context) => CartBloc(
+                    localRepository: context.read<LocalRepositoryImpl>(),
+                  ),
                 ),
               ],
               child: MaterialApp(

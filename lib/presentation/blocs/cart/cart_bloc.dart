@@ -1,24 +1,43 @@
-import 'dart:developer';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:thence_task/core/pop_ups.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thence_task/data/model/cart_product_model.dart';
-import 'package:thence_task/theme/app_colors.dart';
+import 'package:thence_task/data/repositories/local_repository_impl.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  CartBloc() : super(CartState.initial()) {
-    //on<GetAllCartProductsEvent>(_getAllCartProducts);
+  final LocalRepositoryImpl localRepository;
+  CartBloc({
+    required this.localRepository,
+  }) : super(CartState.initial()) {
+    on<OnCartInit>(_initCart);
 
     on<AddProductToCartEvent>(_addProductToCart);
 
     on<RemoveProductFromCartEvent>(_removeProductFromCart);
 
     on<IncreaseProductQuantity>(_increaseProductQuantity);
+
     on<DecreaseProductQuantity>(_decreaseProductQuantity);
+
+    on<StoreCartDataEvent>(_storeCartLocally);
+  }
+
+  void _initCart(
+    OnCartInit event,
+    Emitter<CartState> emit,
+  ) async {
+    final List<CartProductModel> cartProducts =
+        await localRepository.getCartLocalData();
+    if (cartProducts.isNotEmpty) {
+      emit(
+        state.copyWith(
+          cartProducts: cartProducts,
+          totalCount: cartProducts.length,
+        ),
+      );
+    }
   }
 
   void _addProductToCart(
@@ -28,7 +47,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final int index = state.cartProducts.indexWhere(
       (element) => element.id == event.product.id,
     );
-
     List<CartProductModel> temp = state.cartProducts.toList();
 
     if (index != -1) {
@@ -49,10 +67,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       );
     }
 
-    await AppPopUps.showToast(
-      'Product added to cart',
-      AppColors.successColor,
-    );
+    add(StoreCartDataEvent());
   }
 
   void _removeProductFromCart(
@@ -71,28 +86,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         totalCount: state.cartProducts.length,
       ),
     );
+    add(StoreCartDataEvent());
   }
-
-  // void _getAllCartProducts(
-  //   GetAllCartProductsEvent event,
-  //   Emitter<CartState> emit,
-  // ) {
-  //   List<CartProductModel> temp = state.cartProducts.toList();
-  //   double price = 0;
-  //   for (var i = 0; i < temp.length; i++) {
-  //     for (var j = 0; j < temp[i].count; j++) {
-  //       price = price + temp[i].price;
-  //     }
-
-  //     log(price.toString());
-  //   }
-  //   emit(
-  //     state.copyWith(
-  //       cartProducts: state.cartProducts,
-  //       totalPrice: price,
-  //     ),
-  //   );
-  // }
 
   void _increaseProductQuantity(
     IncreaseProductQuantity event,
@@ -104,17 +99,14 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     );
     List<CartProductModel> temp = state.cartProducts.toList();
     temp[index] = temp[index].incrementCount();
-    // for (var i = 0; i < temp.length; i++) {
-    //   for (var j = 0; j < temp[i].count; j++) {
-    //     price = price + temp[i].price;
-    //   }
-    // }
+
     emit(
       state.copyWith(
         cartProducts: temp,
         totalPrice: price,
       ),
     );
+    add(StoreCartDataEvent());
   }
 
   void _decreaseProductQuantity(
@@ -130,11 +122,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       List<CartProductModel> temp = state.cartProducts.toList();
       temp[index] = temp[index].decrementCount();
 
-      // for (var i = 0; i < temp.length; i++) {
-      //   for (var j = 0; j < temp[i].count; j++) {
-      //     price = price - temp[i].price;
-      //   }
-      // }
       emit(
         state.copyWith(
           cartProducts: temp,
@@ -142,5 +129,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         ),
       );
     }
+    add(StoreCartDataEvent());
+  }
+
+//Method for storing cart data in local storage
+  void _storeCartLocally(
+    StoreCartDataEvent event,
+    Emitter<CartState> emit,
+  ) async {
+    await localRepository.storeCartDataLocally(
+      state.cartProducts.map((e) => e.toJson()).toList(),
+    );
   }
 }

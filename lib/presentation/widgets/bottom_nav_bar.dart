@@ -23,7 +23,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     homeBloc = BlocProvider.of<HomeBloc>(context);
     cartBloc = BlocProvider.of<CartBloc>(context);
     homeBloc.add(GetProductsEvent());
-    //cartBloc.add(GetAllCartProductsEvent());
+    cartBloc.add(OnCartInit());
     super.initState();
   }
 

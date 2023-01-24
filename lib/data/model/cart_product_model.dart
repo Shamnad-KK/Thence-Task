@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class CartProductModel {
   int id;
   String image;
@@ -27,11 +28,6 @@ class CartProductModel {
     );
   }
 
-  double get newPrice {
-    final double newPrice = count * price;
-    return newPrice;
-  }
-
   CartProductModel decrementCount() {
     final int newCount = count - 1;
 
@@ -43,5 +39,26 @@ class CartProductModel {
       priceUnit: priceUnit,
       count: newCount,
     );
+  }
+
+  factory CartProductModel.fromJson(Map<String, dynamic> data) {
+    return CartProductModel(
+        id: data['id'],
+        image: data['image_url'],
+        name: data['name'],
+        price: double.parse(data['price']),
+        priceUnit: data['price_unit'],
+        count: data['count'] ?? 0);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'image_url': image,
+      'name': name,
+      'price': price.toString(),
+      'price_unit': priceUnit,
+      'count': count,
+    };
   }
 }

@@ -17,7 +17,7 @@ class HomeRepositoryImpl extends HomeRepository {
             .map((e) => ProductsModel.fromJson(e))
             .toList();
         await LocalRepositoryImpl()
-            .storeDataLocally(jsonEncode(response.data["data"]));
+            .storeHomeApiDataLocally(jsonEncode(response.data["data"]));
         return products;
       }
       return <ProductsModel>[];

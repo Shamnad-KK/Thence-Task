@@ -4,17 +4,6 @@ class CartState extends Equatable {
   final List<CartProductModel> cartProducts;
   final int totalCount;
 
-  double get totalPrice {
-    double price = 0;
-    for (var i = 0; i < cartProducts.length; i++) {
-      for (var j = 0; j < cartProducts[i].count; j++) {
-        price = price + cartProducts[i].price;
-        log('price.toString()');
-      }
-    }
-    return price;
-  }
-
   const CartState({
     required this.cartProducts,
     required this.totalCount,
@@ -36,6 +25,16 @@ class CartState extends Equatable {
       cartProducts: [],
       totalCount: 0,
     );
+  }
+
+  double get totalPrice {
+    double price = 0;
+    for (var i = 0; i < cartProducts.length; i++) {
+      for (var j = 0; j < cartProducts[i].count; j++) {
+        price = price + cartProducts[i].price;
+      }
+    }
+    return price;
   }
 
   @override

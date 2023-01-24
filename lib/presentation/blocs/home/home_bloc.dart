@@ -11,8 +11,10 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomeRepositoryImpl homeRepository;
   final LocalRepositoryImpl localRepository;
-  HomeBloc({required this.homeRepository, required this.localRepository})
-      : super(const HomeState(status: Status.loading)) {
+  HomeBloc({
+    required this.homeRepository,
+    required this.localRepository,
+  }) : super(const HomeState(status: Status.loading)) {
     on<GetProductsEvent>(_getProducts);
 
     on<AddorRemoveFavoriteEvent>(_addOrRemoveFavorite);
@@ -23,19 +25,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   void _getProducts(GetProductsEvent event, Emitter<HomeState> emit) async {
     emit(state.copywith(status: Status.loading));
     try {
-      final products = await homeRepository.getProducts();
-      if (products.isNotEmpty) {
-        emit(state.copywith(status: Status.loaded, products: products));
-        return;
-      }
-      final localProducts = await localRepository.getLocalData();
+      final localProducts = await localRepository.getHomeLocalData();
 
       if (localProducts.isNotEmpty) {
-        emit(state.copywith(status: Status.loaded, products: localProducts));
-        return;
+        emit(
+          state.copywith(
+            status: Status.loaded,
+            products: localProducts,
+          ),
+        );
       }
 
-      emit(state.copywith(status: Status.error));
+      final products = await homeRepository.getProducts();
+      if (products.isNotEmpty) {
+        emit(
+          state.copywith(
+            status: Status.loaded,
+            products: products,
+          ),
+        );
+      }
     } catch (e) {
       emit(state.copywith(status: Status.error));
     }

@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'cart_bloc.dart';
 
 abstract class CartEvent extends Equatable {}
@@ -44,4 +43,14 @@ class DecreaseProductQuantity extends CartEvent {
   });
   @override
   List<Object?> get props => [id];
+}
+
+class StoreCartDataEvent extends CartEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class OnCartInit extends CartEvent {
+  @override
+  List<Object?> get props => [];
 }
