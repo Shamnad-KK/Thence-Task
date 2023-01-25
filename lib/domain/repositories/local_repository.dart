@@ -9,4 +9,8 @@ abstract class LocalRepository {
   Future<bool> storeCartDataLocally(List<Map<String, dynamic>> data);
 
   Future<List<CartProductModel>> getCartLocalData();
+
+  Future<bool> storeFavoritesDataLocally(List<Map<String, dynamic>> data);
+
+  Future<List<ProductsModel>> getFavoritesLocalData();
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thence_task/presentation/blocs/cart/cart_bloc.dart';
+import 'package:thence_task/presentation/blocs/favorites/favorites_bloc.dart';
 import 'package:thence_task/presentation/blocs/home/home_bloc.dart';
 import 'package:thence_task/presentation/screens/cart/cart_screen.dart';
+import 'package:thence_task/presentation/screens/favorites/favorites_screen.dart';
 import 'package:thence_task/theme/app_colors.dart';
 
 import '../blocs/bottom_nav/bottom_nav_bloc.dart';
@@ -18,12 +20,15 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   late final HomeBloc homeBloc;
   late final CartBloc cartBloc;
+  late final FavoritesBloc favoritesBloc;
   @override
   void initState() {
     homeBloc = BlocProvider.of<HomeBloc>(context);
     cartBloc = BlocProvider.of<CartBloc>(context);
+    favoritesBloc = BlocProvider.of<FavoritesBloc>(context);
     homeBloc.add(GetProductsEvent());
     cartBloc.add(OnCartInit());
+    favoritesBloc.add(OnFavotitesInit());
     super.initState();
   }
 
@@ -32,9 +37,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     List<Widget> pages = const [
       HomeScreen(),
       CartScreen(),
-      Center(
-        child: Text('Favorites'),
-      ),
+      FavoritesScreen(),
       Center(
         child: Text('Profile'),
       ),

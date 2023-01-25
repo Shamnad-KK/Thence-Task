@@ -28,7 +28,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     SearchForProductsEvent event,
     Emitter<SearchState> emit,
   ) {
-    log('changed');
     final List<ProductsModel> allProducts = homeBloc.state.products!;
     emit(
       state.copyWith(

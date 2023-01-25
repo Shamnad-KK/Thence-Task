@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thence_task/core/app_spacing.dart';
 import 'package:thence_task/data/model/cart_product_model.dart';
 import 'package:thence_task/presentation/blocs/product_detail/product_detail_bloc.dart';
-import 'package:thence_task/presentation/screens/product_detail/product_detail_screen.dart';
 import 'package:thence_task/theme/app_colors.dart';
 import 'package:thence_task/theme/app_textstyle.dart';
 
@@ -23,9 +22,9 @@ class CartProductWidget extends StatelessWidget {
             .add(ChangeProductDetailChoiceChipEvent(
           index: 0,
         ));
-        await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const ProductDetailScreen(),
-        ));
+        // await Navigator.of(context).push(MaterialPageRoute(
+        //   builder: (context) => const ProductDetailScreen(),
+        // ));
       },
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,

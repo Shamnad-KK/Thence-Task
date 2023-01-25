@@ -6,6 +6,7 @@ import 'package:thence_task/data/model/product_model.dart';
 import 'package:thence_task/presentation/blocs/home/home_bloc.dart';
 import 'package:thence_task/presentation/blocs/product_detail/product_detail_bloc.dart';
 import 'package:thence_task/presentation/screens/product_detail/product_detail_screen.dart';
+import 'package:thence_task/presentation/widgets/add_or_remove_favorite_widget.dart';
 import 'package:thence_task/theme/app_colors.dart';
 import 'package:thence_task/theme/app_textstyle.dart';
 
@@ -15,6 +16,7 @@ class HomeProductWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return GestureDetector(
       onTap: () async {
         BlocProvider.of<HomeBloc>(context)
@@ -35,13 +37,6 @@ class HomeProductWidget extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             children: [
               Container(
-                height: size.height * 0.1,
-                width: size.width * 0.32,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              Container(
                 height: size.height * 0.13,
                 width: size.width * 0.3,
                 decoration: BoxDecoration(
@@ -52,38 +47,17 @@ class HomeProductWidget extends StatelessWidget {
                       fit: BoxFit.fitHeight),
                 ),
               ),
-              BlocBuilder<HomeBloc, HomeState>(
-                builder: (context, state) {
-                  return Positioned(
-                    bottom: 5,
-                    right: 5,
-                    child: Container(
-                      padding: EdgeInsets.all(size.aspectRatio * 0.1),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          BlocProvider.of<HomeBloc>(context)
-                              .add(AddorRemoveFavoriteEvent(id: product.id!));
-                        },
-                        child: Center(
-                          child: product.isFavorite
-                              ? const Icon(
-                                  Icons.favorite,
-                                  color: AppColors.red,
-                                )
-                              : const Icon(
-                                  Icons.favorite_border,
-                                  color: AppColors.bodyGreyText,
-                                ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              )
+              Positioned(
+                bottom: 5,
+                right: 5,
+                child: AddorRemoveFavoriteWidget(
+                  product: product,
+                  height: size.height * 0.03,
+                  width: size.width * 0.06,
+                  iconSize: 22,
+                  circularRadius: 5,
+                ),
+              ),
             ],
           ),
           AppSpacing.sboxW10,

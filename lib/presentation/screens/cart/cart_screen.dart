@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:thence_task/core/pop_ups.dart';
 import 'package:thence_task/presentation/blocs/cart/cart_bloc.dart';
 import 'package:thence_task/presentation/screens/cart/widgets/cart_delete_widget.dart';
 import 'package:thence_task/presentation/screens/cart/widgets/cart_product_widget.dart';
@@ -12,20 +11,13 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartBloc = BlocProvider.of<CartBloc>(context);
-    //cartBloc.add(GetAllCartProductsEvent());
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
-              child: BlocConsumer<CartBloc, CartState>(
-                listener: (context, state) async {
-                  await AppPopUps.showToast(
-                    'Product added to cart',
-                    AppColors.successColor,
-                  );
-                },
+              child: BlocBuilder<CartBloc, CartState>(
                 builder: (context, state) {
                   return state.cartProducts.isEmpty
                       ? const Center(

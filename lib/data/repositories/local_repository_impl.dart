@@ -73,18 +73,58 @@ class LocalRepositoryImpl extends LocalRepository {
       if (data == null) {
         return <CartProductModel>[];
       }
-      log(data.toString());
 
       final json = jsonDecode(data);
 
       List<CartProductModel> localCartData =
           (json as List).map((e) => CartProductModel.fromJson(e)).toList();
 
-      log(localCartData.length.toString());
       return localCartData;
     } catch (e) {
       log(e.toString());
     }
     return <CartProductModel>[];
+  }
+
+  @override
+  Future<bool> storeFavoritesDataLocally(
+      List<Map<String, dynamic>> data) async {
+    try {
+      final sharedPreference = await SharedPreferences.getInstance();
+      final prefs = await sharedPreference.setString(
+        AppStrings.favoriteProductResponse,
+        jsonEncode(data),
+      );
+      return prefs;
+    } catch (e) {
+      log(e.toString());
+    }
+    return false;
+  }
+
+  @override
+  Future<List<ProductsModel>> getFavoritesLocalData() async {
+    try {
+      final sharedPreference = await SharedPreferences.getInstance();
+      final data = sharedPreference.getString(
+        AppStrings.favoriteProductResponse,
+      );
+
+      if (data == null) {
+        return <ProductsModel>[];
+      }
+      log(data.toString());
+
+      final json = jsonDecode(data);
+
+      List<ProductsModel> localCartData =
+          (json as List).map((e) => ProductsModel.fromJson(e)).toList();
+
+      log(localCartData.length.toString());
+      return localCartData;
+    } catch (e) {
+      log(e.toString());
+    }
+    return <ProductsModel>[];
   }
 }
