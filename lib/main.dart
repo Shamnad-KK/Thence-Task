@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:thence_task/data/repositories/local_repository_impl.dart';
 import 'package:thence_task/data/repositories/product_remote_repository_impl.dart';
+import 'package:thence_task/presentation/blocs/address/address_bloc.dart';
 import 'package:thence_task/presentation/blocs/cart/cart_bloc.dart';
 import 'package:thence_task/presentation/blocs/favorites/favorites_bloc.dart';
 import 'package:thence_task/presentation/widgets/bottom_nav_bar.dart';
@@ -62,6 +63,9 @@ class MyApp extends StatelessWidget {
                   create: (context) => FavoritesBloc(
                     localRepositoryImpl: context.read<LocalRepositoryImpl>(),
                   ),
+                ),
+                BlocProvider(
+                  create: (context) => AddressBloc(),
                 ),
               ],
               child: MaterialApp(

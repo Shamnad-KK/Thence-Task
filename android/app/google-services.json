@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "959784548127",
+    "project_id": "thence-assignment",
+    "storage_bucket": "thence-assignment.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959784548127:android:9c45c0113362f77425a22a",
+        "android_client_info": {
+          "package_name": "com.example.thence_task"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "959784548127-knpb0rkah12k8i01b9402ffo3msej2mq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.thence_task",
+            "certificate_hash": "9e7228edc1ed3cf80ee6627edb6790d9545a695c"
+          }
+        },
+        {
+          "client_id": "959784548127-bdh54s03rje24jfjhimmt0rbnl4d7pbj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh9i96EINOpom95tYysW_IhTu-pI7FokI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "959784548127-bdh54s03rje24jfjhimmt0rbnl4d7pbj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

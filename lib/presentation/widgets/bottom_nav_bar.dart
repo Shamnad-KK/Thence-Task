@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thence_task/presentation/blocs/cart/cart_bloc.dart';
 import 'package:thence_task/presentation/blocs/favorites/favorites_bloc.dart';
 import 'package:thence_task/presentation/blocs/home/home_bloc.dart';
+import 'package:thence_task/presentation/screens/account/account_screen.dart';
 import 'package:thence_task/presentation/screens/cart/cart_screen.dart';
 import 'package:thence_task/presentation/screens/favorites/favorites_screen.dart';
 import 'package:thence_task/theme/app_colors.dart';
@@ -38,9 +39,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       HomeScreen(),
       CartScreen(),
       FavoritesScreen(),
-      Center(
-        child: Text('Profile'),
-      ),
+      AccountScreen(),
     ];
     return BlocBuilder<BottomNavBloc, BottomNavState>(
       builder: (context, state) {

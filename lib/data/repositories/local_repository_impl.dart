@@ -113,15 +113,13 @@ class LocalRepositoryImpl extends LocalRepository {
       if (data == null) {
         return <ProductsModel>[];
       }
-      log(data.toString());
 
       final json = jsonDecode(data);
 
-      List<ProductsModel> localCartData =
+      List<ProductsModel> localFavoritesData =
           (json as List).map((e) => ProductsModel.fromJson(e)).toList();
 
-      log(localCartData.length.toString());
-      return localCartData;
+      return localFavoritesData;
     } catch (e) {
       log(e.toString());
     }

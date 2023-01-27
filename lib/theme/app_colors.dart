@@ -25,6 +25,7 @@ class AppColors {
   );
   static const appbarTitle = Colors.black;
   static const rating = Color(0xFFFFBB56);
+  static final addressContainer = Colors.grey[400];
   static const homeBanner = LinearGradient(
     colors: [
       Color(0xFFE5ECF2),
