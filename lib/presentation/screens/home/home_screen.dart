@@ -19,10 +19,10 @@ class HomeScreen extends StatelessWidget {
       ),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          if (state.status == Status.loading) {
+          if (state.status == HomeStatus.loading) {
             return const HomeShimmers();
           }
-          if (state.status == Status.loaded) {
+          if (state.status == HomeStatus.loaded) {
             return const HomeLoadedWidget();
           }
           return const HomeErrorWidget();

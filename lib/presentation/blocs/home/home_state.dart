@@ -1,13 +1,13 @@
 part of 'home_bloc.dart';
 
-enum Status {
+enum HomeStatus {
   loading,
   loaded,
   error,
 }
 
 class HomeState extends Equatable {
-  final Status status;
+  final HomeStatus status;
   final List<ProductsModel>? products;
   final ProductsModel? product;
   const HomeState({
@@ -17,7 +17,7 @@ class HomeState extends Equatable {
   });
 
   HomeState copywith({
-    Status? status,
+    HomeStatus? status,
     List<ProductsModel>? products,
     final ProductsModel? product,
   }) =>

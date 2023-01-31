@@ -30,7 +30,7 @@ class HomeAppBarWidget extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  if (homeBloc.state.status == Status.loaded) {
+                  if (homeBloc.state.status == HomeStatus.loaded) {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => BlocProvider(
                         create: (context) =>

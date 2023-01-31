@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thence_task/core/app_spacing.dart';
+import 'package:thence_task/presentation/blocs/auth/auth_bloc.dart';
+import 'package:thence_task/presentation/screens/account/widgets/account_row_widget.dart';
 import 'package:thence_task/presentation/screens/address/address_screen.dart';
+import 'package:thence_task/presentation/screens/auth/login_screen.dart';
 import 'package:thence_task/theme/app_textstyle.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -46,6 +50,24 @@ class AccountScreen extends StatelessWidget {
               text: "Invite Friends",
               onTap: () {},
             ),
+            BlocListener<AuthBloc, AuthState>(
+              listener: (context, state) {
+                if (state.status == AuthStatus.loaded) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                      (route) => false);
+                }
+              },
+              child: AccountRowWidget(
+                icon: Icons.logout,
+                text: "Log out",
+                onTap: () {
+                  BlocProvider.of<AuthBloc>(context).add(SignOutEvent());
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -56,42 +78,6 @@ class AccountScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const Addressscreen(),
-      ),
-    );
-  }
-}
-
-class AccountRowWidget extends StatelessWidget {
-  const AccountRowWidget({
-    Key? key,
-    required this.text,
-    required this.icon,
-    required this.onTap,
-  }) : super(key: key);
-  final String text;
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        onTap();
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Icon(icon),
-            AppSpacing.sboxW10,
-            Text(text),
-            const Spacer(),
-            const Icon(
-              Icons.arrow_forward,
-              size: 20,
-            )
-          ],
-        ),
       ),
     );
   }

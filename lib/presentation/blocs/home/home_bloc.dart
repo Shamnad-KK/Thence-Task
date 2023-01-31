@@ -14,7 +14,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc({
     required this.homeRepository,
     required this.localRepository,
-  }) : super(const HomeState(status: Status.loading)) {
+  }) : super(const HomeState(status: HomeStatus.loading)) {
     on<GetProductsEvent>(_getProducts);
 
     // on<AddorRemoveFavoriteEvent>(_addOrRemoveFavorite);
@@ -23,14 +23,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   void _getProducts(GetProductsEvent event, Emitter<HomeState> emit) async {
-    emit(state.copywith(status: Status.loading));
+    emit(state.copywith(status: HomeStatus.loading));
     try {
       final localProducts = await localRepository.getHomeLocalData();
 
       if (localProducts.isNotEmpty) {
         emit(
           state.copywith(
-            status: Status.loaded,
+            status: HomeStatus.loaded,
             products: localProducts,
           ),
         );
@@ -40,13 +40,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       if (products.isNotEmpty) {
         emit(
           state.copywith(
-            status: Status.loaded,
+            status: HomeStatus.loaded,
             products: products,
           ),
         );
       }
     } catch (e) {
-      emit(state.copywith(status: Status.error));
+      emit(state.copywith(status: HomeStatus.error));
     }
   }
 
