@@ -108,7 +108,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         add(VerificationCompletedEvent(credential: credential));
       },
     );
-    emit(state.copyWith(phone: event.mobile, timeRemaining: 30));
+    emit(state.copyWith(phone: event.mobile, timeRemaining: 60));
   }
 
   //Saving the verification Id to state when firebase sends the otp

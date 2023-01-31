@@ -29,7 +29,7 @@ class AuthRepositoryImpl extends AuthRepository {
     try {
       await auth.verifyPhoneNumber(
         phoneNumber: phone,
-        timeout: const Duration(seconds: 120),
+        timeout: const Duration(seconds: 60),
         verificationCompleted: verificationCompleted,
         verificationFailed: (FirebaseAuthException e) {
           log(e.toString());

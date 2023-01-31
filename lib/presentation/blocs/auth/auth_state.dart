@@ -31,7 +31,7 @@ class AuthState extends Equatable {
       verId: '',
       otp: '',
       status: AuthStatus.loading,
-      timeRemaining: 30,
+      timeRemaining: 60,
       userExists: false,
       phone: '',
       userName: '',
