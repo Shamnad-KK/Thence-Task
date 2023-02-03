@@ -27,6 +27,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     homeBloc = BlocProvider.of<HomeBloc>(context);
     cartBloc = BlocProvider.of<CartBloc>(context);
     favoritesBloc = BlocProvider.of<FavoritesBloc>(context);
+
     homeBloc.add(GetProductsEvent());
     cartBloc.add(OnCartInit());
     favoritesBloc.add(OnFavotitesInit());

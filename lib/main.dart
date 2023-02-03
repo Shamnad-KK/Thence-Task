@@ -1,8 +1,13 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:thence_task/data/repositories/auth_repository_impl.dart';
@@ -12,6 +17,8 @@ import 'package:thence_task/presentation/blocs/address/address_bloc.dart';
 import 'package:thence_task/presentation/blocs/auth/auth_bloc.dart';
 import 'package:thence_task/presentation/blocs/cart/cart_bloc.dart';
 import 'package:thence_task/presentation/blocs/favorites/favorites_bloc.dart';
+import 'package:thence_task/presentation/blocs/login/login_bloc.dart';
+import 'package:thence_task/presentation/blocs/user_check/user_check_bloc.dart';
 import 'package:thence_task/presentation/screens/auth/login_screen.dart';
 import 'package:thence_task/presentation/widgets/bottom_nav_bar.dart';
 import 'package:thence_task/theme/app_colors.dart';
@@ -21,14 +28,71 @@ import 'presentation/blocs/home/home_bloc.dart';
 import 'presentation/blocs/home_choice_chips/home_choice_chips_bloc.dart';
 import 'presentation/blocs/product_detail/product_detail_bloc.dart';
 
+AndroidNotificationChannel channel = const AndroidNotificationChannel(
+  'high_importance_channel',
+  'high_importance_channel',
+  description: 'This channel is used for imp notifications',
+  importance: Importance.high,
+  playSound: true,
+);
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> _backgroundMessageHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  log('background message ${message.notification!.body}');
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    FirebaseMessaging.onMessage.listen((event) async {
+      RemoteNotification? notification = event.notification;
+      AndroidNotification? android = event.notification?.android!;
+      if (notification != null && android != null) {
+        await flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          event.notification?.title,
+          event.notification?.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              playSound: true,
+              importance: Importance.high,
+              icon: '@mipmap-hdpi/ic_launcher.png',
+            ),
+          ),
+        );
+        log('message arrived');
+        log(event.notification!.body!);
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -44,14 +108,10 @@ class MyApp extends StatelessWidget {
               RepositoryProvider(
                 create: (context) => FirebaseFirestore.instance,
               ),
-              // RepositoryProvider(
-              //   create: (context) => SharedPreferences,
-              // ),
               RepositoryProvider(
                 create: (context) => AuthRepositoryImpl(
                   auth: context.read<FirebaseAuth>(),
                   firestore: context.read<FirebaseFirestore>(),
-                  //sharedPreferences: context.read<SharedPreferences>(),
                 ),
               ),
               RepositoryProvider(
@@ -65,8 +125,10 @@ class MyApp extends StatelessWidget {
               providers: [
                 BlocProvider(
                   create: (context) => HomeBloc(
-                    homeRepository: context.read<HomeRepositoryImpl>(),
-                    localRepository: context.read<LocalRepositoryImpl>(),
+                    homeRepository:
+                        RepositoryProvider.of<HomeRepositoryImpl>(context),
+                    localRepository:
+                        RepositoryProvider.of<LocalRepositoryImpl>(context),
                   ),
                 ),
                 BlocProvider(
@@ -80,12 +142,14 @@ class MyApp extends StatelessWidget {
                 ),
                 BlocProvider(
                   create: (context) => CartBloc(
-                    localRepository: context.read<LocalRepositoryImpl>(),
+                    localRepository:
+                        RepositoryProvider.of<LocalRepositoryImpl>(context),
                   ),
                 ),
                 BlocProvider(
                   create: (context) => FavoritesBloc(
-                    localRepositoryImpl: context.read<LocalRepositoryImpl>(),
+                    localRepositoryImpl:
+                        RepositoryProvider.of<LocalRepositoryImpl>(context),
                   ),
                 ),
                 BlocProvider(
@@ -93,10 +157,26 @@ class MyApp extends StatelessWidget {
                 ),
                 BlocProvider(
                   create: (context) => AuthBloc(
+                    authRepository:
+                        RepositoryProvider.of<AuthRepositoryImpl>(context),
+                  )..add(GetAuthStatusEvent()),
+                ),
+                BlocProvider(
+                  create: (context) => UserCheckBloc(
+                    authRepository:
+                        RepositoryProvider.of<AuthRepositoryImpl>(context),
+                  ),
+                ),
+                BlocProvider(
+                  create: (context) => LoginBloc(
+                    authBloc: context.read<AuthBloc>(),
                     auth: FirebaseAuth.instance,
-                    authRepository: context.read<AuthRepositoryImpl>(),
-                    firestore: context.read<FirebaseFirestore>(),
-                  )..add(GetAuthResponseEvent()),
+                    userCheckBloc: context.read<UserCheckBloc>(),
+                    authRepository:
+                        RepositoryProvider.of<AuthRepositoryImpl>(context),
+                    firestore:
+                        RepositoryProvider.of<FirebaseFirestore>(context),
+                  ),
                 ),
               ],
               child: MaterialApp(
@@ -115,10 +195,14 @@ class MyApp extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
                 home: BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
-                    if (state.alreadyLoggedIn == false) {
-                      return const LoginScreen();
+                    if (state is AuthInitialized) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is Authenticated) {
+                      return const BottomNavBar();
                     }
-                    return const BottomNavBar();
+                    return const LoginScreen();
                   },
                 ),
               ),

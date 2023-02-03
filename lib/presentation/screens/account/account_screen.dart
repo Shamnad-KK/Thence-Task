@@ -52,7 +52,7 @@ class AccountScreen extends StatelessWidget {
             ),
             BlocListener<AuthBloc, AuthState>(
               listener: (context, state) {
-                if (state.status == AuthStatus.loaded) {
+                if (state is Unauthenticated) {
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                         builder: (context) => const LoginScreen(),

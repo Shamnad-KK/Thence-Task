@@ -25,15 +25,14 @@ class AuthRepositoryImpl extends AuthRepository {
     )
         codeSent,
     required void Function(PhoneAuthCredential) verificationCompleted,
+    required void Function(FirebaseAuthException) verificationFailed,
   }) async {
     try {
       await auth.verifyPhoneNumber(
         phoneNumber: phone,
         timeout: const Duration(seconds: 60),
         verificationCompleted: verificationCompleted,
-        verificationFailed: (FirebaseAuthException e) {
-          log(e.toString());
-        },
+        verificationFailed: verificationFailed,
         codeSent: codeSent,
         codeAutoRetrievalTimeout: (String verificationId) {
           log('time out');
@@ -48,14 +47,15 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<void> verifyOtp(
       {required String verId, required String smsCode}) async {
     try {
-      await auth.signInWithCredential(
+      final credentials = await auth.signInWithCredential(
         PhoneAuthProvider.credential(
           verificationId: verId,
           smsCode: smsCode,
         ),
       );
+      log(credentials.user!.phoneNumber!);
     } catch (e) {
-      log(e.toString());
+      rethrow;
     }
   }
 
@@ -97,7 +97,7 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<void> saveAuthResponse() async {
+  Future<void> saveAuthStatus() async {
     try {
       final sharedPreferences = await SharedPreferences.getInstance();
       await sharedPreferences.setBool(AppStrings.authResponse, true);

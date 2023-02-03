@@ -10,6 +10,7 @@ abstract class AuthRepository {
     )
         codeSent,
     required void Function(PhoneAuthCredential) verificationCompleted,
+    required void Function(FirebaseAuthException) verificationFailed,
   });
   Future<void> verifyOtp({
     required String verId,
@@ -21,7 +22,7 @@ abstract class AuthRepository {
 
   Future<bool> userExists({required String phone});
 
-  Future<void> saveAuthResponse();
+  Future<void> saveAuthStatus();
 
   Future<bool> getAuthResponse();
 

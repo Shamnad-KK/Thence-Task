@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:thence_task/presentation/blocs/auth/auth_bloc.dart';
+import 'package:thence_task/presentation/blocs/login/login_bloc.dart';
 import 'package:thence_task/presentation/screens/auth/otp_screen.dart';
 import 'package:thence_task/presentation/screens/auth/widgets/auth_appbar_title_widget.dart';
 import 'package:thence_task/presentation/screens/auth/widgets/auth_title_widget.dart';
@@ -13,7 +13,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController mobileController = TextEditingController();
 
-    final authBloc = BlocProvider.of<AuthBloc>(context);
+    final loginBloc = BlocProvider.of<LoginBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: const AuthAppbarTitleWidget(title: 'Login'),
@@ -36,21 +36,21 @@ class LoginScreen extends StatelessWidget {
                 keyboardType: TextInputType.phone,
               ),
             ),
-            BlocListener<AuthBloc, AuthState>(
+            BlocListener<LoginBloc, LoginState>(
               listenWhen: (previous, current) {
                 return previous.verId == '' && current.verId != '';
               },
               listener: (context, state) {
-                authBloc.add(ChangeRemainingTimeEvent());
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => const OtpScreen(),
                   ),
                 );
+                loginBloc.add(ChangeRemainingTimeEvent());
               },
               child: ElevatedButton(
                 onPressed: () {
-                  authBloc.add(
+                  loginBloc.add(
                     LoginEvent(mobile: "+91${mobileController.text}"),
                   );
                 },
