@@ -10,13 +10,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:thence_task/core/navigator_key.dart';
 import 'package:thence_task/data/repositories/auth_repository_impl.dart';
+import 'package:thence_task/data/repositories/firebase_repository_impl.dart';
 import 'package:thence_task/data/repositories/local_repository_impl.dart';
 import 'package:thence_task/data/repositories/product_remote_repository_impl.dart';
 import 'package:thence_task/presentation/blocs/address/address_bloc.dart';
 import 'package:thence_task/presentation/blocs/auth/auth_bloc.dart';
 import 'package:thence_task/presentation/blocs/cart/cart_bloc.dart';
 import 'package:thence_task/presentation/blocs/favorites/favorites_bloc.dart';
+import 'package:thence_task/presentation/blocs/fcm/fcm_bloc.dart';
 import 'package:thence_task/presentation/blocs/login/login_bloc.dart';
 import 'package:thence_task/presentation/blocs/user_check/user_check_bloc.dart';
 import 'package:thence_task/presentation/screens/auth/login_screen.dart';
@@ -28,70 +31,32 @@ import 'presentation/blocs/home/home_bloc.dart';
 import 'presentation/blocs/home_choice_chips/home_choice_chips_bloc.dart';
 import 'presentation/blocs/product_detail/product_detail_bloc.dart';
 
-AndroidNotificationChannel channel = const AndroidNotificationChannel(
-  'high_importance_channel',
-  'high_importance_channel',
-  description: 'This channel is used for imp notifications',
-  importance: Importance.high,
-  playSound: true,
-);
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
+  _foregroundMessageHandler();
+
+  runApp(const MyApp());
+}
 
 Future<void> _backgroundMessageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   log('background message ${message.notification!.body}');
 }
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+Future<void> _foregroundMessageHandler() async {
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    sound: true,
+    badge: true,
+  );
   await Firebase.initializeApp();
-
-  FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
-
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-
-  runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    FirebaseMessaging.onMessage.listen((event) async {
-      RemoteNotification? notification = event.notification;
-      AndroidNotification? android = event.notification?.android!;
-      if (notification != null && android != null) {
-        await flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          event.notification?.title,
-          event.notification?.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channelDescription: channel.description,
-              playSound: true,
-              importance: Importance.high,
-              icon: '@mipmap-hdpi/ic_launcher.png',
-            ),
-          ),
-        );
-        log('message arrived');
-        log(event.notification!.body!);
-      }
-    });
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,10 +68,19 @@ class _MyAppState extends State<MyApp> {
           return MultiRepositoryProvider(
             providers: [
               RepositoryProvider(
+                create: (context) => FlutterLocalNotificationsPlugin(),
+              ),
+              RepositoryProvider(
                 create: (context) => FirebaseAuth.instance,
               ),
               RepositoryProvider(
                 create: (context) => FirebaseFirestore.instance,
+              ),
+              RepositoryProvider(
+                create: (context) => FirebaseRepositoryImpl(
+                  flutterLocalNotificationsPlugin:
+                      context.read<FlutterLocalNotificationsPlugin>(),
+                ),
               ),
               RepositoryProvider(
                 create: (context) => AuthRepositoryImpl(
@@ -178,8 +152,16 @@ class _MyAppState extends State<MyApp> {
                         RepositoryProvider.of<FirebaseFirestore>(context),
                   ),
                 ),
+                BlocProvider(
+                  create: (context) => FcmBloc(
+                    firebaseRepositoryImpl:
+                        context.read<FirebaseRepositoryImpl>(),
+                    homeBloc: context.read<HomeBloc>(),
+                  ),
+                ),
               ],
               child: MaterialApp(
+                navigatorKey: NavKeyHelper.navigatorKey,
                 title: 'Flutter Demo',
                 theme: ThemeData(
                   primarySwatch: Colors.blue,

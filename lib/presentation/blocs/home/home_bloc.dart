@@ -50,19 +50,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  // void _addOrRemoveFavorite(
-  //     AddorRemoveFavoriteEvent event, Emitter<HomeState> emit) {
-  //   final index = state.products!.indexWhere((e) => e.id == event.id);
-
-  //   state.products![index] = state.products![index].toggleFavorites();
-
-  //   emit(
-  //     state.copywith(
-  //         products: state.products!, product: state.products![index]),
-  //   );
-  // }
-
-  void _selectAProduct(SelectAProductEvent event, Emitter<HomeState> emit) {
+  void _selectAProduct(
+    SelectAProductEvent event,
+    Emitter<HomeState> emit,
+  ) {
     emit(state.copywith(product: event.product));
   }
 }
