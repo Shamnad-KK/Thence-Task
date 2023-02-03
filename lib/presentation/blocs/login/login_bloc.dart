@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:developer';
 
@@ -6,9 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:thence_task/data/repositories/auth_repository_impl.dart';
 import 'package:thence_task/presentation/blocs/auth/auth_bloc.dart';
+import 'package:thence_task/presentation/blocs/fcm/fcm_bloc.dart';
 import 'package:thence_task/presentation/blocs/user_check/user_check_bloc.dart';
 
 part 'login_event.dart';
@@ -20,12 +19,14 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
   final FirebaseFirestore firestore;
   final AuthBloc authBloc;
   final UserCheckBloc userCheckBloc;
+  final FcmBloc fcmBloc;
   LoginBloc({
     required this.auth,
     required this.authRepository,
     required this.firestore,
     required this.authBloc,
     required this.userCheckBloc,
+    required this.fcmBloc,
   }) : super(LoginState.initial()) {
     on<LoginEvent>(_login);
 
@@ -110,6 +111,9 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
 
         ///Seting the auth state to [Authenticated]
         authBloc.add(SetAuthenticatedEvent());
+
+        //Getting the current device token and storing it to firebase
+        fcmBloc.add(GetFCMTokenEvent());
 
         ///Saving the authenticated status to sharedPreference so if the app
         /// is restarted..then user will redirected to [Homepage]

@@ -80,6 +80,8 @@ class MyApp extends StatelessWidget {
                 create: (context) => FirebaseRepositoryImpl(
                   flutterLocalNotificationsPlugin:
                       context.read<FlutterLocalNotificationsPlugin>(),
+                  firebaseAuth: context.read<FirebaseAuth>(),
+                  firebaseFirestore: context.read<FirebaseFirestore>(),
                 ),
               ),
               RepositoryProvider(
@@ -142,6 +144,13 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
                 BlocProvider(
+                  create: (context) => FcmBloc(
+                    firebaseRepositoryImpl:
+                        context.read<FirebaseRepositoryImpl>(),
+                    homeBloc: context.read<HomeBloc>(),
+                  ),
+                ),
+                BlocProvider(
                   create: (context) => LoginBloc(
                     authBloc: context.read<AuthBloc>(),
                     auth: FirebaseAuth.instance,
@@ -150,13 +159,7 @@ class MyApp extends StatelessWidget {
                         RepositoryProvider.of<AuthRepositoryImpl>(context),
                     firestore:
                         RepositoryProvider.of<FirebaseFirestore>(context),
-                  ),
-                ),
-                BlocProvider(
-                  create: (context) => FcmBloc(
-                    firebaseRepositoryImpl:
-                        context.read<FirebaseRepositoryImpl>(),
-                    homeBloc: context.read<HomeBloc>(),
+                    fcmBloc: context.read<FcmBloc>(),
                   ),
                 ),
               ],

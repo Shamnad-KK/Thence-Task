@@ -5,4 +5,6 @@ abstract class FirebaseRepository {
     void Function(NotificationResponse)? onDidReceiveNotificationResponse,
   });
   Future<void> sendForegroundMessage();
+  Future<String?> getFCMtoken();
+  Future<void> storeFCMtokenToFirebase(String deviceToken);
 }

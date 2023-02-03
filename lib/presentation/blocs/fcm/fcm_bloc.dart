@@ -20,9 +20,11 @@ class FcmBloc extends Bloc<FcmEvent, FcmState> {
 
     on<SendForegroundNotificationsEvent>(_sendForegroundNotifications);
 
-    on<OnNotificationTapEvent>(_onNotificationTap);
-
     on<OnDidNotificationResponseEvent>(_onDidReceiveNotificationResponse);
+
+    on<GetFCMTokenEvent>(_getFCMtoken);
+
+    on<StoreFCMTokenEvent>(_storeFcmToken);
   }
 
   void _initLocalNotifications(
@@ -44,15 +46,6 @@ class FcmBloc extends Bloc<FcmEvent, FcmState> {
     await firebaseRepositoryImpl.sendForegroundMessage();
   }
 
-  void _onNotificationTap(
-    OnNotificationTapEvent event,
-    Emitter<FcmState> emit,
-  ) {
-    emit(
-      state.copyWith(notificationTaped: true),
-    );
-  }
-
   void _onDidReceiveNotificationResponse(
     OnDidNotificationResponseEvent event,
     Emitter<FcmState> emit,
@@ -67,5 +60,26 @@ class FcmBloc extends Bloc<FcmEvent, FcmState> {
         state.copyWith(notificationTaped: true),
       );
     }
+  }
+
+  void _getFCMtoken(
+    GetFCMTokenEvent event,
+    Emitter<FcmState> emit,
+  ) async {
+    await firebaseRepositoryImpl.getFCMtoken().then((value) {
+      if (value != null) {
+        log("Device token : $value");
+        add(StoreFCMTokenEvent(deviceToken: value));
+      }
+    });
+  }
+
+  void _storeFcmToken(
+    StoreFCMTokenEvent event,
+    Emitter<FcmState> emit,
+  ) async {
+    await firebaseRepositoryImpl.storeFCMtokenToFirebase(
+      event.deviceToken,
+    );
   }
 }
