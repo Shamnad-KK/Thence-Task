@@ -15,7 +15,7 @@ class ProductDetailImage extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        final product = state.product!;
+        final product = state.selectedProduct!;
         return CachedNetworkImage(
           width: size.width,
           height: size.height * 0.4,

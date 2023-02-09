@@ -8,14 +8,28 @@ class InitLocalNotificationsEvent extends FcmEvent {
   List<Object?> get props => [];
 }
 
+class GetInitialMessageEvent extends FcmEvent {
+  @override
+  List<Object?> get props => [];
+}
+
 class SendForegroundNotificationsEvent extends FcmEvent {
   @override
   List<Object?> get props => [];
 }
 
-class OnDidNotificationResponseEvent extends FcmEvent {
+class BackgroundNotificationTappedEvent extends FcmEvent {
   @override
   List<Object?> get props => [];
+}
+
+class OnDidNotificationResponseEvent extends FcmEvent {
+  final int id;
+  OnDidNotificationResponseEvent({
+    required this.id,
+  });
+  @override
+  List<Object?> get props => [id];
 }
 
 class GetFCMTokenEvent extends FcmEvent {

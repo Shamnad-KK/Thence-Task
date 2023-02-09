@@ -2,6 +2,7 @@
 part of 'login_bloc.dart';
 
 enum LoginStatus {
+  none,
   loading,
   loaded,
   error,
@@ -32,7 +33,7 @@ class LoginState extends Equatable {
     return const LoginState(
       verId: '',
       otp: '',
-      status: LoginStatus.loading,
+      status: LoginStatus.none,
       timeRemaining: 60,
       userExists: false,
       phone: '',

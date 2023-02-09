@@ -14,10 +14,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc({
     required this.homeRepository,
     required this.localRepository,
-  }) : super(const HomeState(status: HomeStatus.loading)) {
+  }) : super(HomeState.initial()) {
     on<GetProductsEvent>(_getProducts);
-
-    // on<AddorRemoveFavoriteEvent>(_addOrRemoveFavorite);
 
     on<SelectAProductEvent>(_selectAProduct);
   }
@@ -54,6 +52,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     SelectAProductEvent event,
     Emitter<HomeState> emit,
   ) {
-    emit(state.copywith(product: event.product));
+    emit(state.copywith(selectedProduct: event.product));
   }
 }

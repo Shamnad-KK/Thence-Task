@@ -14,7 +14,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   }) : super(FavoritesState.initial()) {
     on<OnFavotitesInit>(_onFavoritesInit);
 
-    on<AddToFavoriteEvent>(_addItemToFavorite);
+    on<AddorRemoveFavoriteEvent>(_addorRemoveItemToFavorite);
 
     on<StoreFavotitesDataEvent>(_storeFavoritesLocally);
   }
@@ -32,8 +32,8 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     }
   }
 
-  void _addItemToFavorite(
-    AddToFavoriteEvent event,
+  void _addorRemoveItemToFavorite(
+    AddorRemoveFavoriteEvent event,
     Emitter<FavoritesState> emit,
   ) {
     final ProductsModel product = event.product;

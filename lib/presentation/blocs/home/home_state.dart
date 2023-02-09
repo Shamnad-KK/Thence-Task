@@ -9,24 +9,32 @@ enum HomeStatus {
 class HomeState extends Equatable {
   final HomeStatus status;
   final List<ProductsModel>? products;
-  final ProductsModel? product;
+  final ProductsModel? selectedProduct;
   const HomeState({
     required this.status,
     this.products,
-    this.product,
+    this.selectedProduct,
   });
+
+  factory HomeState.initial() {
+    return const HomeState(
+      status: HomeStatus.loading,
+      selectedProduct: null,
+      products: null,
+    );
+  }
 
   HomeState copywith({
     HomeStatus? status,
     List<ProductsModel>? products,
-    final ProductsModel? product,
+    final ProductsModel? selectedProduct,
   }) =>
       HomeState(
         status: status ?? this.status,
         products: products ?? this.products,
-        product: product ?? this.product,
+        selectedProduct: selectedProduct ?? this.selectedProduct,
       );
 
   @override
-  List<Object?> get props => [status, products, product];
+  List<Object?> get props => [status, products, selectedProduct];
 }

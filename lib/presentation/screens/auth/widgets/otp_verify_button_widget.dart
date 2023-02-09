@@ -35,6 +35,11 @@ class OtpVerifyButtonWidget extends StatelessWidget {
       },
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
+          if (state.status == LoginStatus.loading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

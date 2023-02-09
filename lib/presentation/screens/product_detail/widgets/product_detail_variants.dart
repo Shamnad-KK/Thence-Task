@@ -17,7 +17,7 @@ class ProductDetailVariants extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        final product = state.product!;
+        final product = state.selectedProduct!;
         return Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(

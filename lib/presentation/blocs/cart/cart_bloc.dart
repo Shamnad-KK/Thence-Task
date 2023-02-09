@@ -2,12 +2,13 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thence_task/data/model/cart_product_model.dart';
 import 'package:thence_task/data/repositories/local_repository_impl.dart';
+import 'package:thence_task/domain/repositories/local_repository.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  final LocalRepositoryImpl localRepository;
+  final LocalRepository localRepository;
   CartBloc({
     required this.localRepository,
   }) : super(CartState.initial()) {
@@ -34,7 +35,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(
         state.copyWith(
           cartProducts: cartProducts,
-          totalCount: cartProducts.length,
         ),
       );
     }
@@ -53,7 +53,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       temp[index].count++;
       state.copyWith(
         cartProducts: temp,
-        totalCount: temp.length,
       );
     } else {
       emit(
@@ -62,7 +61,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             event.product,
             ...temp,
           ],
-          totalCount: state.cartProducts.length,
         ),
       );
     }
@@ -83,7 +81,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     emit(
       state.copyWith(
         cartProducts: temp,
-        totalCount: state.cartProducts.length,
       ),
     );
     add(StoreCartDataEvent());

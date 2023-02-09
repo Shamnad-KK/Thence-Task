@@ -99,6 +99,9 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     VerifyOtpEvent event,
     Emitter<LoginState> emit,
   ) async {
+    emit(
+      state.copyWith(status: LoginStatus.loading),
+    );
     try {
       await authRepository
           .verifyOtp(
@@ -129,6 +132,9 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
       addError(Exception(e.toString()), StackTrace.current);
       authBloc.add(SetAuthErrorEvent(errorMessage: e.toString()));
     }
+    emit(
+      state.copyWith(status: LoginStatus.loaded, timeRemaining: 0),
+    );
   }
 
   //This method will take userdata from the event and save to firebase

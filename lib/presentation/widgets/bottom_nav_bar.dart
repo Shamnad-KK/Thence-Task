@@ -32,7 +32,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
     favoritesBloc = BlocProvider.of<FavoritesBloc>(context);
     fcmBloc = BlocProvider.of<FcmBloc>(context);
     fcmBloc.add(InitLocalNotificationsEvent());
+    fcmBloc.add(GetInitialMessageEvent());
     fcmBloc.add(SendForegroundNotificationsEvent());
+    fcmBloc.add(BackgroundNotificationTappedEvent());
     homeBloc.add(GetProductsEvent());
     cartBloc.add(OnCartInit());
     favoritesBloc.add(OnFavotitesInit());

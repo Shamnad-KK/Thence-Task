@@ -20,7 +20,7 @@ class ProductDetailBottomRow extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        final product = state.product!;
+        final product = state.selectedProduct!;
         return Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),

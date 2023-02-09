@@ -40,7 +40,7 @@ class AddorRemoveFavoriteWidget extends StatelessWidget {
           child: GestureDetector(
             onTap: () {
               favoritesBloc.add(
-                AddToFavoriteEvent(product: product),
+                AddorRemoveFavoriteEvent(product: product),
               );
             },
             child: Center(
